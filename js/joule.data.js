@@ -56,6 +56,8 @@ function data() {
     // Public variables
 
     this.metricType = "power";
+    this.chartUnit  = " kW";
+    this.chartUnitFormatter = pwrFormatter;
     this.plotData = {};
     this.viewRange = {
         start: new Date().addMonths(-1),
@@ -72,6 +74,18 @@ function data() {
     var meterReadings = {};
 
     // Public methods
+
+    this.setMetric = function (mt) {
+	this.metricType = mt;
+	if (mt == "power"){
+	    this.chartUnit = " kW";
+	    this.chartUnitFormatter = pwrFormatter;
+	}
+	else {
+	    this.chartUnit = " gCO2/s";
+	    this.chartUnitFormatter = carbonFormatter;
+	}
+    }
 
     this.invalidatePlotLines = function() {
         for (var i = 0; i < joule.tree.plotLineDesc.length; i++) joule.tree.plotLineDesc[i].valid = false;

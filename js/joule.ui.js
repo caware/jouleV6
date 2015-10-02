@@ -260,23 +260,10 @@ function JouleUIController() {
     this.units = function(button) {
 
         var unit = $(button).attr("unit");
+        if (joule.data.metricType == unit) return;
 
-        if (joule.data.metricType != unit) {
-            switch (unit) {
-                case "carbon":
-                    joule.data.metricType = unit;
-                    $(".btn-units").html($("li[unit=" + unit + "] a").html());
-                    break;
-                case "power":
-                    joule.data.metricType = unit;
-                    $(".btn-units").html($("li[unit=" + unit + "] a").html());
-                    break;
-                default:
-                    return;
-            }
-        }
-        else return;
-
+	joule.data.setMetric (unit);
+        $(".btn-units").html($("li[unit=" + unit + "] a").html());
         $("li[role=unit]").toggleClass("active", false);
         $(button).toggleClass("active", true);
 

@@ -11,16 +11,6 @@ var col = d3.scale.category10();
 
 var utils = {
 
-    relevantUnit: function (){
-	if (joule.data.metricType == "carbon") return " gCO2/s";
-	return " kW";
-    },
-
-    relevantFormatter: function (val){
-	if (joule.data.metricType == "carbon")  return carbonFormatter(val);
-	return pwrFormatter(val);
-    },
-
     timestampStringFromData: function(sData){
 	switch (sData.interval) {
         case "hourly": return sData.timestamp.toString("ddd d MMM yyyy hh:mm tt");

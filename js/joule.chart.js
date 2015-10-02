@@ -997,7 +997,7 @@ function chart(options) {
             })
             .append("title")
             .text(function(d) {
-                return d.source.name + " → " + d.target.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
+                return d.source.name + " → " + d.target.name + "\n" + joule.data.chartUnitFormatter(d.value) + joule.data.chartUnit;
             });
         // Update links
         var linkUpdate = link.transition().duration(duration).attr("d", path)
@@ -1009,7 +1009,7 @@ function chart(options) {
             })
             .select("title")
             .text(function(d) {
-                return d.source.name + " → " + d.target.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
+                return d.source.name + " → " + d.target.name + "\n" + joule.data.chartUnitFormatter(d.value) + joule.data.chartUnit;
             });
 
         var node = chartTemp.container.nodes.selectAll(".sNode")
@@ -1038,7 +1038,7 @@ function chart(options) {
             })
             .append("title")
             .text(function(d) {
-                return d.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
+                return d.name + "\n" + joule.data.chartUnitFormatter(d.value) + joule.data.chartUnit;
             });
 
         nodeEnter.filter(function(d) {
@@ -1076,7 +1076,7 @@ function chart(options) {
             .attr("width", chartTemp.sankey.nodeWidth())
             .select("title")
             .text(function(d) {
-                return d.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
+                return d.name + "\n" + joule.data.chartUnitFormatter(d.value) + joule.data.chartUnit;
             });
         // Set drag and double click behaviour on nodes
         node.call(d3.behavior.drag()
@@ -1319,7 +1319,7 @@ function chart(options) {
                 .call(rect)
                 .append("title")
                 .text(function(d) {
-                    return utils.relevantFormatter(d.value) + utils.relevantUnit();
+                    return joule.data.chartUnitFormatter(d.value) + joule.data.chartUnit;
                 });
 
             g.append("text")
@@ -1334,7 +1334,7 @@ function chart(options) {
 
             g.append("text")
                 .text(function(d) {
-                    return utils.relevantFormatter(d.value) + utils.relevantUnit();
+                    return joule.data.chartUnitFormatter(d.value) + joule.data.chartUnit;
                 })
                 .attr("class", "valueTag")
                 .attr("text-anchor", "end")
