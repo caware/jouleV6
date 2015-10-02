@@ -6,6 +6,10 @@
 	TO DO:
 	 * Set change all variables to private and use accessors to set or get their values
 
+
+
+	 Or more importantly split into smaller files and make the code readable....
+
 */
 function chart(options) {
 
@@ -993,7 +997,7 @@ function chart(options) {
             })
             .append("title")
             .text(function(d) {
-                return d.source.name + " → " + d.target.name + "\n" + pwrFormatter(d.value) + " kW";
+                return d.source.name + " → " + d.target.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
             });
         // Update links
         var linkUpdate = link.transition().duration(duration).attr("d", path)
@@ -1005,7 +1009,7 @@ function chart(options) {
             })
             .select("title")
             .text(function(d) {
-                return d.source.name + " → " + d.target.name + "\n" + pwrFormatter(d.value) + " kW";
+                return d.source.name + " → " + d.target.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
             });
 
         var node = chartTemp.container.nodes.selectAll(".sNode")
@@ -1034,7 +1038,7 @@ function chart(options) {
             })
             .append("title")
             .text(function(d) {
-                return d.name + "\n" + pwrFormatter(d.value) + " kW";
+                return d.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
             });
 
         nodeEnter.filter(function(d) {
@@ -1072,7 +1076,7 @@ function chart(options) {
             .attr("width", chartTemp.sankey.nodeWidth())
             .select("title")
             .text(function(d) {
-                return d.name + "\n" + pwrFormatter(d.value) + " kW";
+                return d.name + "\n" + utils.relevantFormatter(d.value) + utils.relevantUnit();
             });
         // Set drag and double click behaviour on nodes
         node.call(d3.behavior.drag()
@@ -1108,40 +1112,16 @@ function chart(options) {
             })
             .attr("x", -6)
             .attr("text-anchor", "end");
-        // Set date text
+
+        // Set date/time text
+
         if (chartTemp.timestamp.select("text").empty())
             chartTemp.timestamp.append("text").text(function() {
-                switch (sData.interval) {
-                    case "hourly":
-                        return sData.timestamp.toString("ddd d MMM yyyy hh:mm tt");
-                        break;
-                    case "daily":
-                        return sData.timestamp.toString("ddd d MMM yyyy");
-                        break;
-                    case "weekly":
-                        return sData.timestamp.toString("ddd d MMM yyyy") + " Week " + sData.timestamp.getWeek();
-                        break;
-                    case "monthly":
-                        return sData.timestamp.toString("MMM yyyy");
-                        break;
-                }
+		return utils.timestampStringFromData(sData);
             }).attr("x", dim.w).attr("alignment-baseline", "text-before-edge").attr("text-anchor", "end");
         else
             chartTemp.timestamp.select("text").text(function() {
-                switch (sData.interval) {
-                    case "hourly":
-                        return sData.timestamp.toString("ddd d MMM yyyy hh:mm tt");
-                        break;
-                    case "daily":
-                        return sData.timestamp.toString("ddd d MMM yyyy");
-                        break;
-                    case "weekly":
-                        return sData.timestamp.toString("ddd d MMM yyyy") + " Week " + sData.timestamp.getWeek();
-                        break;
-                    case "monthly":
-                        return sData.timestamp.toString("MMM yyyy");
-                        break;
-                }
+		return utils.timestampStringFromData(sData);
             });
 
         function dragmove(d) { // Handle dragging of nodes
@@ -1339,7 +1319,7 @@ function chart(options) {
                 .call(rect)
                 .append("title")
                 .text(function(d) {
-                    return pwrFormatter(d.value) + " kW";
+                    return utils.relevantFormatter(d.value) + utils.relevantUnit();
                 });
 
             g.append("text")
@@ -1354,7 +1334,7 @@ function chart(options) {
 
             g.append("text")
                 .text(function(d) {
-                    return pwrFormatter(d.value) + " kW";
+                    return utils.relevantFormatter(d.value) + utils.relevantUnit();
                 })
                 .attr("class", "valueTag")
                 .attr("text-anchor", "end")

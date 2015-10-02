@@ -3,13 +3,32 @@ var zero = d3.format("02d");
 var yearMonthFormatter = d3.time.format("%b %Y");
 var pwrFormatter = d3.format(".2f");
 var engFormatter = d3.format(",f");
-var carbonFormatter = d3.format(",f");
+var carbonFormatter = d3.format(".1f");
 var zoomDateFormat = d3.time.format("%a %d %b");
 var zoomTimeFormat = d3.time.format("%H:%M");
 var overallDateFormat = d3.time.format("%d %b '%y");
 var col = d3.scale.category10();
 
 var utils = {
+
+    relevantUnit: function (){
+	if (joule.data.metricType == "carbon") return " gCO2/s";
+	return " kW";
+    },
+
+    relevantFormatter: function (val){
+	if (joule.data.metricType == "carbon")  return carbonFormatter(val);
+	return pwrFormatter(val);
+    },
+
+    timestampStringFromData: function(sData){
+	switch (sData.interval) {
+        case "hourly": return sData.timestamp.toString("ddd d MMM yyyy hh:mm tt");
+        case "daily": return sData.timestamp.toString("ddd d MMM yyyy");
+        case "weekly": return sData.timestamp.toString("ddd d MMM yyyy") + " Week " + sData.timestamp.getWeek();
+        case "monthly": return sData.timestamp.toString("MMM yyyy");
+        }
+    },
 
     sum: function(array) {
         return array.reduce(function(a, b) {
