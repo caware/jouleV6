@@ -813,94 +813,49 @@ function chart(options) {
             forceFitColumns: true
         };
 
-        if (joule.data.metricType == "carbon") {
-            _.each(chartTemp.focusData.data, function(d, i) {
-                i < joule.data.plotData.table.length ? joule.data.plotData.table[i].avgselected = carbonFormatter(d3.mean(d.data, function(e) {
-                    return (typeof e.y === "number") ? e.y : 0;
-                })) : null;
-            });
-            columns = [{
-                id: "PlotColour",
-                name: "Colour",
-                field: "colour",
-                width: 60,
-                formatter: Slick.Formatters.Color(chartTemp.color)
-            }, {
-                id: "Description",
-                name: "Description",
-                field: "description",
-                width: 195
-            }, {
-                id: "StartMonthyear",
-                name: "Start",
-                field: "startmonthyear",
-                width: 80
-            }, {
-                id: "EndMonthyear",
-                name: "End",
-                field: "endmonthyear",
-                width: 80
-            }, {
-                id: "CO2/s selected",
-                name: "g/s Selected",
-                field: "avgselected",
-                width: 130
-            }, {
-                id: "C02/s all",
-                name: "g/s Entire",
-                field: "avgtotal",
-                width: 110
-            }, {
-                id: "TotalCO2",
-                name: "Total CO2 (tonnes)",
-                field: "totalcarbon",
-                width: 145
-            }];
-        }
-        else {
-            _.each(chartTemp.focusData.data, function(d, i) {
-                i < joule.data.plotData.table.length ? joule.data.plotData.table[i].avgselected = pwrFormatter(d3.mean(d.data, function(e) {
-                    return (typeof e.y === "number") ? e.y : 0;
-                })) : null;
-            });
-            columns = [{
-                id: "PlotColour",
-                name: "Colour",
-                field: "colour",
-                width: 60,
-                formatter: Slick.Formatters.Color(chartTemp.color)
-            }, {
-                id: "Description",
-                name: "Description",
-                field: "description",
-                width: 195
-            }, {
-                id: "StartMonthyear",
-                name: "Start",
-                field: "startmonthyear",
-                width: 80
-            }, {
-                id: "EndMonthyear",
-                name: "End",
-                field: "endmonthyear",
-                width: 80
-            }, {
-                id: "kWSelected",
-                name: "Avg kW Selected",
-                field: "avgselected",
-                width: 130
-            }, {
-                id: "kWTotal",
-                name: "Avg kW Entire",
-                field: "avgtotal",
-                width: 110
-            }, {
-                id: "TotalEnergy",
-                name: "Total Energy (kWh)",
-                field: "totalenergy",
-                width: 145
-            }];
-        }
+        _.each(chartTemp.focusData.data, function(d, i) {
+            i < joule.data.plotData.table.length ? joule.data.plotData.table[i].avgselected = joule.data.chartUnitFormatter(d3.mean(d.data, function(e) {
+                return (typeof e.y === "number") ? e.y : 0;
+            })) : null;
+        });
+        columns = [{
+            id: "PlotColour",
+            name: "Colour",
+            field: "colour",
+            width: 60,
+            formatter: Slick.Formatters.Color(chartTemp.color)
+        }, {
+            id: "Description",
+            name: "Description",
+            field: "description",
+            width: 195
+        }, {
+            id: "StartMonthyear",
+            name: "Start",
+            field: "startmonthyear",
+            width: 80
+        }, {
+            id: "EndMonthyear",
+            name: "End",
+            field: "endmonthyear",
+            width: 80
+        }, {
+            id: joule.data.selectedId,
+            name: joule.data.selectedName,
+            field: "avgselected",
+            width: 130
+        }, {
+            id: joule.data.allId,
+            name: joule.data.allName,
+            field: "avgtotal",
+            width: 110
+        }, {
+            id: joule.data.totalId,
+            name: joule.data.totalName,
+            field: joule.data.totalField,
+            width: 145
+        }];
+   
 
         if (typeof that.grid == 'undefined') {
             that.grid = new Slick.Grid("#data-table", joule.data.plotData.table, columns, options);

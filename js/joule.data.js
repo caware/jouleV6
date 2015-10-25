@@ -55,9 +55,6 @@ function data() {
 
     // Public variables
 
-    this.metricType = "power";
-    this.chartUnit  = " kW";
-    this.chartUnitFormatter = pwrFormatter;
     this.plotData = {};
     this.viewRange = {
         start: new Date().addMonths(-1),
@@ -80,10 +77,25 @@ function data() {
 	if (mt == "power"){
 	    this.chartUnit = " kW";
 	    this.chartUnitFormatter = pwrFormatter;
+	    this.selectedId = "kWselected";
+	    this.selectedName = "Avg kW Selected";
+	    this.allId = "kWTotal";
+	    this.allName = "Avg kW Entire";
+	    this.totalId = "TotalEnergy";
+	    this.totalName = "Total Energy (kWh)"
+	    this.totalField = "totalenergy";
+
 	}
 	else {
 	    this.chartUnit = " gCO2/s";
 	    this.chartUnitFormatter = carbonFormatter;
+	    this.selectedId = "CO2/s selected";
+	    this.selectedName = "g/s Selected";
+	    this.allId = "CO2/s all";
+	    this.allName = "g/s Entire";
+	    this.totalId = "TotalC02";
+	    this.totalName = "Total CO2 (tonnes)"
+	    this.totalField = "totalcarbon";
 	}
     }
 
@@ -981,5 +993,5 @@ function data() {
     // Initilisation calls
 
     updateSuffixes();
-
+    this.setMetric ("power");
 }
