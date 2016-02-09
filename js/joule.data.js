@@ -121,7 +121,9 @@ function data() {
 
         switch (type) {
             case "sankey":
-                return sankeyTree(options.rootId, options.maxDepth, options.step, options.interval);
+            var  skt = sankeyTree(options.rootId, options.maxDepth, options.step, options.interval);
+	    console.log ("here skT");
+	    return skt;
                 break;
             case "line":
                 return lineData();
@@ -143,19 +145,32 @@ function data() {
 
     }
 
+    this.resetForNewRange = function () {
+	updateSuffixes();
+        for (var i = 0; i < joule.tree.plotLineDesc.length; i++) joule.tree.plotLineDesc[i].valid = false;
+        for (var k in meterReadings)
+            if (meterReadings.hasOwnProperty(k)) meterReadings[k].valid = false;
+    }
+
     this.changeRange = function(range) {
 
         if (range[1].isBefore(range[0]) || range[0].isBefore(joule.data.zeroDate)) return false; // Make sure range remains consistent
         that.viewRange.start = range[0];
         that.viewRange.end = range[1];
-        updateSuffixes();
-        for (var i = 0; i < joule.tree.plotLineDesc.length; i++) joule.tree.plotLineDesc[i].valid = false;
-        for (var k in meterReadings)
-            if (meterReadings.hasOwnProperty(k)) meterReadings[k].valid = false;
-
+	that.resetForNewRange();
         return true;
 
     };
+
+    this.backup = function(){
+	if (that.viewRange.end.isBefore (joule.data.zeroDate)) return false;
+	that.viewRange.end.addMonths(-1).clearTime().moveToLastDayOfMonth();
+	if (that.viewRange.start.isAfter(joule.data.zeroDate)){
+	    that.viewRange.start.addMonths(-1).clearTime().moveToFirstDayOfMonth();
+	}
+	that.resetForNewRange();
+        return true;
+	}
 
     // Private methods
 
@@ -219,6 +234,8 @@ function data() {
 
         var loadCount = 0;
         var errorCount = 0;
+
+	console.log (meterNames);
 
         return $.Deferred(function(deferredObj) {
 
@@ -548,7 +565,7 @@ function data() {
         var invalid = true;
         table = [];
 
-        // Function code
+        // createPoints function code
 
         for (var p = 0; p < joule.tree.plotLineDesc.length; p++) { // For each plot line in plotLineDesc
             var pL = joule.tree.plotLineDesc[p];
@@ -556,7 +573,7 @@ function data() {
             if (!pL.selected) continue;
             invalid = false;
             pL.error = true;
-            pL.selected = false;
+      //      pL.selected = false;
 
             validateData(pL);
 
@@ -669,7 +686,10 @@ function data() {
 
         }
 
-        if (invalid) return false;
+        if (invalid) {
+	    console.log ("Invalid");
+	    return false;
+	}
         if (pAA.data.length === 0) {
             console.warn("Data is empty for the given viewRange. Selection will be moved back by a month");
             return false;
@@ -860,6 +880,8 @@ function data() {
 
         // Get data for the selected nodes
         return update().then(function() {
+
+	    if (typeof joule.tree.selected[0].points == 'undefined') return;
             if (typeof interval == 'undefined')
                 if (typeof that.plotData.interval == 'undefined')
                     interval = 'hourly';
@@ -976,6 +998,7 @@ function data() {
         ).done(function() {
             var iterations = 0;
             var validSelection = createPoints();
+	    /*
             while (validSelection === false && iterations < 5) {
                 console.log(that.viewRange);
                 that.changeRange([that.viewRange.end.clone().addMonths(-1).clearTime().moveToFirstDayOfMonth(), that.viewRange.end.clearTime().addMonths(-1).moveToLastDayOfMonth()]);
@@ -986,6 +1009,8 @@ function data() {
                 iterations++;
                 console.log(iterations, validSelection, that.viewRange);
             }
+	    */
+	    if (!validSelection) joule.ui.backup();
         });
 
     }

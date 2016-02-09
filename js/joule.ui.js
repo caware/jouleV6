@@ -290,10 +290,23 @@ function JouleUIController() {
             joule.data.render();
         }
 
-        $("input.date[name=startDate]").datetimepicker("setEndDate", end);
-        $("input.date[name=endDate]").datetimepicker("setStartDate", start);
+//        $("input.date[name=startDate]").datetimepicker("setDate", start);
+//        $("input.date[name=endDate]").datetimepicker("setDate", end);
 
     };
+
+    this.backup = function(){
+	console.log ("backing up")
+	
+	if (joule.data.backup()) {
+	    console.log (joule.data.viewRange);
+	    joule.data.render();
+	
+            $("input.date[name=startDate]").datetimepicker("setDate", joule.data.viewRange.start);
+	    $("input.date[name=endDate]").datetimepicker("setDate", joule.data.viewRange.end);
+	}
+	       
+    }
 
     this.update = function() {
 
@@ -320,6 +333,7 @@ function JouleUIController() {
         }
 
     }
+
 
     this.jouleFinishedLoading = function() {
         $("button, a.noLink").click(function(e) {

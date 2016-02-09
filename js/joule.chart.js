@@ -641,7 +641,7 @@ function chart(options) {
     };
 
     var lineUpdate = function(options) { // Update the line chart
-
+	if (joule.data.plotData.data.length < 1) return;
         if (!options.refresh) {
 
             that.treeUpdate({}); // Update the tree
@@ -903,7 +903,8 @@ function chart(options) {
         //joule.data.sankeyTree(options.rootId, options.maxDepth, options.step, options.interval); // Update joule.data.plotData
         that.treeUpdate({}); // Update the tree
         var sData = joule.data.plotData;
-
+	console.log (sData);
+	if (jQuery.isEmptyObject(sData)) return;
         chartTemp.sankey.nodes(sData.nodes).links(sData.links).layout(32);
 
         var path = chartTemp.sankey.link();

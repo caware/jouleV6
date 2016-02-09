@@ -6,7 +6,7 @@
 		},
 		"defaultChart" : {
 			"description" : "Default chart type to be shown on startup [line, sankey, treeMap]",
-			"value" : "sankey"
+			"value" : "line"
 		},
 		"segmentation" : {
 			"description" : "How meter info is segmented",
